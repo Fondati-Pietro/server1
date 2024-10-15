@@ -51,6 +51,7 @@ public class MioThread extends Thread{
                             break;
                 
                         default:
+                            System.out.println("Choose not valid");
                             break;
                     }
                     out.writeBytes(cambio + '\n');
