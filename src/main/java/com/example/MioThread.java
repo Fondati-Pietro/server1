@@ -3,39 +3,67 @@ package com.example;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class MioThread extends Thread{
     Socket s;
     MioThread(Socket s){
         this.s = s;
-    }
-
+    
     try {
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-        DataOutputStream out = new DataOutputStream(s.getOutputStream());          
+            BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            DataOutputStream out = new DataOutputStream(s.getOutputStream());          
 
-        String stringaMaiuscola;
-        do {
+            String stringaRicevuta;
+            String scelta;
+            String cambio = "";
+            do {
             
-            String stringaRicevuta = in.readLine();
-            System.out.println("Stringa ricevuta: " + stringaRicevuta);
+                stringaRicevuta = in.readLine();
+                scelta = in.readLine();
+                System.out.println("Stringa ricevuta: " + stringaRicevuta);
 
-            if(stringaRicevuta.equals("!")){
-                    stringaMaiuscola = "STOP";
-                    break;
-                }
-                System.out.println(stringaRicevuta);
-                stringaMaiuscola = stringaRicevuta.toUpperCase();
-                out.writeBytes(stringaMaiuscola + '\n'); 
+                    switch (scelta) {
+                        case "M":
+                            System.out.println("Stringa ricevuta: " + stringaRicevuta);
+                            cambio = stringaRicevuta.toUpperCase();
+                            break;
                 
-            } while (stringaMaiuscola.equals("!"));
+                        case "m":
+                            System.out.println("Stringa ricevuta: " + stringaRicevuta);
+                            cambio = stringaRicevuta.toLowerCase();
+                            break;
+                
+                        case "rib":
+                            System.out.println("Stringa ricevuta: " + stringaRicevuta);
+                            cambio = new StringBuilder(stringaRicevuta).reverse().toString();
+                            break;
+                
+                        case "count":
+                            System.out.println("Stringa ricevuta: " + stringaRicevuta);
+                            cambio = stringaRicevuta.length() + "";
+                            break;
+                
+                        case "esc":
+                            System.out.println("STOP");
+                            cambio = "Macchina chiusa";
+                            break;
+                
+                        default:
+                            break;
+                    }
+                    out.writeBytes(cambio + '\n');
+        
+                } while (!scelta.equals("esc"));
 
-            s.close();
+                this.s.close();
+                out.close();
+                in.close();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }
+        } 
+             
+    }
 }

@@ -9,14 +9,14 @@ public class Main {
 
         System.out.println("Server avviato");
 
-        ServerSocket server = new ServerSocket(3000);
-
-        do {
-            Socket s = server.accept();
-            System.out.println("Client collegato");
-            MioThread t = new MioThread(s);
-            t.start();
-        } while (true);
+        try (ServerSocket server = new ServerSocket(3000)) {
+            do {
+                Socket s = server.accept();
+                System.out.println("Client collegato");
+                MioThread t = new MioThread(s);
+                t.start();
+            } while (true);
+        }
 
 
     }       
